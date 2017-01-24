@@ -1,53 +1,34 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+   AsyncStorage,
+   AppRegistry
+} from 'react-native'
+import asyncComponent from './src/asyncComponent'
 
 export default class asyncStorageTest extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-      </View>
-    );
-  }
+   constructor() {
+      super();
+      this.state = {
+         'data': ''
+      }
+   }
+   componentDidMount = () => {
+      AsyncStorage.getItem('data').then((value) => {
+         this.setState({'data': value});
+      });
+   }
+   setData = (value) => {
+      AsyncStorage.setItem('data', value);
+      this.setState({'data': value});
+   }
+   render() {
+      return (
+         <AsyncStorageExample
+            data = {this.state.data}
+            setData = {this.setData}
+         />
+      );
+   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
 
 AppRegistry.registerComponent('asyncStorageTest', () => asyncStorageTest);
